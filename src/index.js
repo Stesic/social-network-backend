@@ -1,35 +1,72 @@
+require("./db/mongoose");
+
 const express = require("express");
 const path = require("path");
 const app = express();
-const personRoute = require("./routes/person");
-const userRoute = require("./routes/user");
+const personRoute = require("./routes/person.route");
+const userRoute = require("./routes/user.route");
+const authRoute = require("./routes/auth.route");
+const postRoute = require("./routes/post.route");
+const commentRoute = require("./routes/comment.route");
 const bodyParser = require("body-parser");
-const PORT = process.env.PORT || 3000;
+const authMiddleware = require("./library/middleware/auth.middleware");
+
+const PORT = process.env.PORT || 5500;
+
+app.use(authMiddleware);
 
 //to have access to req.body in entire project
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use((req, res, next) => {
-  console.log(req.originalUrl);
-  next();
-});
+app.use(authRoute);
 app.use(userRoute);
 app.use(personRoute);
+app.use(postRoute);
+app.use(commentRoute);
 app.use(express.static("public"));
 
-//handler for 404 - resource not found
+//handle 404
 app.use((req, res, next) => {
   res.status(404).send("page not fount, 404");
   next();
 });
 
-// handler for 500
+//handle 500
 app.use((error, req, res, next) => {
-  // res.sendFile(path.join(__dirname, "../public/error500.html"));
-  res.send(error);
+  res.status(500).send({ error: error.message });
   next();
 });
 
 app.listen(PORT, () => {
   console.log(`Server has started on ${PORT}`);
 });
+
+// const Post = require("./library/models/post.model");
+// const User = require("./library/models/user.model");
+// const main = async () => {
+//   //find post owner
+//   // const post = await Post.findById("5ea1507fc45e241f78bf62b1");
+//   // const postOwner = await post
+//   //   .populate({
+//   //     path: "owner",
+//   //     match: "req.query....",
+//   //     options: {
+//   //       limit: parseInt(req.query.limit),
+//   //       skip: parseInt(req.query.skip), //preksakanje stranica
+//   //       offset: parseInt(req.query.offset),
+//   //       sort: {
+//   //         createdAt: -1, // -1 desc, 1 asc
+//   //       },
+//   //     },
+//   //   })
+//   //   .execPopulate();
+
+//   // find user posts
+//   const user = await User.findById("5ea1ce5d7a1f3301a87a477d");
+//   const userPosts = await user.populate("posts").execPopulate();
+//   const comm = await userPosts.populate("comments").execPopulate();
+//   console.log(userPosts.posts);
+//   console.log(user.comments);
+//   console.log(user.posts);
+// };
+// main();
