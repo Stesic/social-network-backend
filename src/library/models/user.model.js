@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       lowercase: true,
     },
-    avatarUrs: {
+    avatarUrl: {
       type: String,
       default: "https://via.placeholder.com/900x900",
     },
@@ -35,11 +35,20 @@ const UserSchema = new mongoose.Schema(
       type: String,
       minlength: 10,
     },
+    fullName: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+UserSchema.pre("save", async function (next) {
+  const user = this;
+  user.fullName = `${user.firstName} ${user.lastName}`;
+  next();
+});
 
 UserSchema.virtual("posts", {
   ref: "Post",

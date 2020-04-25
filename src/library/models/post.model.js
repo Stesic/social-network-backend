@@ -13,7 +13,7 @@ const PostSchema = new mongoose.Schema(
       required: true,
       lowercase: true,
     },
-    url: {
+    src: {
       type: String,
       required: true,
       lowercase: true,
@@ -27,7 +27,7 @@ const PostSchema = new mongoose.Schema(
 PostSchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",
-  foreignField: "owner",
+  foreignField: "postId",
 });
 
 module.exports = mongoose.model("Post", PostSchema);

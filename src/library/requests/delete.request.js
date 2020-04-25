@@ -8,8 +8,10 @@ const deleteOne = async (req, res, Model) => {
     const modelData = await Model.findOne({
       _id: reqId,
     });
-
-    if (modelData.owner.toString() !== req.user._id.toString()) {
+    const modelDataOwner = req.path.includes("users")
+      ? modelData._id
+      : modelData.owner;
+    if (modelDataOwner.toString() !== req.user._id.toString()) {
       return res.status(403).send("You are not allowed to delete this data!!!");
     }
 

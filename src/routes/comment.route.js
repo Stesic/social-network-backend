@@ -9,7 +9,7 @@ const deleteRequest = require("../library/requests/delete.request");
 
 //GET ALL COMMENTS
 router.get("/comments", async (req, res) => {
-  getRequest.getAll(req, res, Comment);
+  getRequest.getAll(req, res, Comment, "body");
 });
 
 //GET SINGLE COMMENT BY ID

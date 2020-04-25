@@ -62,11 +62,11 @@ app.listen(PORT, () => {
 //   //   .execPopulate();
 
 //   // find user posts
-//   const user = await User.findById("5ea1ce5d7a1f3301a87a477d");
+//   const user = await User.findById("5ea3ea937302803440e5e632");
 //   const userPosts = await user.populate("posts").execPopulate();
 //   const comm = await userPosts.populate("comments").execPopulate();
-//   console.log(userPosts.posts);
+//   // console.log(userPosts.posts);
 //   console.log(user.comments);
-//   console.log(user.posts);
+//   // console.log(user.posts);
 // };
 // main();

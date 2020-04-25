@@ -1,7 +1,6 @@
 const update = async (req, res, Model, allowedUpdates) => {
   const updates = Object.keys(req.body);
   const hasBodyContent = Object.keys(req.body).length > 0;
-
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -17,7 +16,10 @@ const update = async (req, res, Model, allowedUpdates) => {
     if (!modelData) {
       return res.status(404).send(`${req.path} not found`);
     }
-    if (modelData.owner.toString() !== req.user._id.toString()) {
+    const modelDataOwner = req.path.includes("users")
+      ? modelData._id
+      : modelData.owner;
+    if (modelDataOwner.toString() !== req.user._id.toString()) {
       return res.status(403).send("You are not allowed to change this data!!!");
     }
 

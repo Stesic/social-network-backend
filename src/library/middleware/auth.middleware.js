@@ -10,9 +10,10 @@ const auth = async (req, res, next) => {
     }
 
     const authToken = req.header("Authorization").replace("Bearer ", "");
-    const userData = jwt.verify(authToken, "ivancicamala");
+    // const apiKey = req.header("x-api-key");
 
-    const id = userData._id;
+    const userData = jwt.verify(authToken, "1vaHd3v");
+
     const user = await User.findOne({
       email: userData.email,
     });

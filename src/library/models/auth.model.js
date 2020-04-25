@@ -47,7 +47,7 @@ AuthSchema.methods.generateAuthToken = function () {
 
   return jwt.sign(
     { _id, firstName, lastName, email, createdAt, updatedAt },
-    "ivancicamala"
+    "1vaHd3v"
   );
 };
 
