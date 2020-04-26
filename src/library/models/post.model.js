@@ -16,7 +16,7 @@ const PostSchema = new mongoose.Schema(
     src: {
       type: String,
       required: true,
-      lowercase: true,
+      // lowercase: true,
     },
   },
   {

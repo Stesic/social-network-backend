@@ -44,11 +44,17 @@ const AuthSchema = new mongoose.Schema(
 AuthSchema.methods.generateAuthToken = function () {
   const user = this;
   const { _id, firstName, lastName, email, createdAt, updatedAt } = user;
-
   return jwt.sign(
     { _id, firstName, lastName, email, createdAt, updatedAt },
     "1vaHd3v"
   );
+  // return {
+  //   token: jwt.sign(
+  //     { firstName, lastName, email, createdAt, updatedAt },
+  //     "1vaHd3v"
+  //   ),
+  //   _id,
+  // };
 };
 
 AuthSchema.pre("save", async function (next) {
@@ -63,7 +69,6 @@ AuthSchema.statics.findByCredentials = async (model, email, password) => {
   });
   if (user) {
     const isPasswordOk = await bcrypt.compare(password, user.password);
-
     if (isPasswordOk) {
       return user.generateAuthToken();
     } else {

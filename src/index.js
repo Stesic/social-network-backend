@@ -2,6 +2,7 @@ require("./db/mongoose");
 
 const express = require("express");
 const path = require("path");
+const cors = require("cors");
 const app = express();
 const personRoute = require("./routes/person.route");
 const userRoute = require("./routes/user.route");
@@ -12,6 +13,8 @@ const bodyParser = require("body-parser");
 const authMiddleware = require("./library/middleware/auth.middleware");
 
 const PORT = process.env.PORT || 5500;
+
+app.use(cors());
 
 app.use(authMiddleware);
 
@@ -43,6 +46,16 @@ app.listen(PORT, () => {
 
 // const Post = require("./library/models/post.model");
 // const User = require("./library/models/user.model");
+// const Auth = require("./library/models/auth.model");
+// const Comment = require("./library/models/comment.model");
+// const main = async () => {
+//   // await User.deleteMany({});
+//   User.collection.drop();
+//   // Post.collection.drop();
+//   Auth.collection.drop();
+//   // Comment.collection.drop();
+// };
+// main();
 // const main = async () => {
 //   //find post owner
 //   // const post = await Post.findById("5ea1507fc45e241f78bf62b1");
@@ -62,11 +75,12 @@ app.listen(PORT, () => {
 //   //   .execPopulate();
 
 //   // find user posts
-//   const user = await User.findById("5ea3ea937302803440e5e632");
+//   const user = await User.findById("5ea3fca7a4856017b024b66d");
 //   const userPosts = await user.populate("posts").execPopulate();
 //   const comm = await userPosts.populate("comments").execPopulate();
 //   // console.log(userPosts.posts);
-//   console.log(user.comments);
+//   // console.log(user.comments);
 //   // console.log(user.posts);
+//   console.log(userPosts.posts);
 // };
 // main();

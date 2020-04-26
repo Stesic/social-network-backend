@@ -33,9 +33,20 @@ router.get("/users/:id/posts", async (req, res) => {
   getRequest.getRelationAll(req, res, User, "posts");
 });
 
+//GET USER COMMENTS
+router.get("/users/:id/comments", async (req, res) => {
+  getRequest.getRelationAll(req, res, User, "comments");
+});
+
 //PATCH UPDATE USER
 router.patch("/users/:id", async (req, res) => {
-  const allowedUpdates = ["firstName", "lastName", "avatarUrl", "about"];
+  const allowedUpdates = [
+    "firstName",
+    "lastName",
+    "avatarUrl",
+    "about",
+    "prefix",
+  ];
   patchRequest.update(req, res, User, allowedUpdates);
 });
 

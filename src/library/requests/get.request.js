@@ -9,13 +9,13 @@ const getAll = async (req, res, Model, searchField) => {
       const filteredData = await Model.find({
         [searchField]: new RegExp(searchQuery, "i"),
       });
-      console.log(searchField);
 
       res.status(200).send({ data: filteredData, total: filteredData.length });
       return;
     }
     // all data
     const data = await Model.find().limit(limit).skip(offset);
+
     if (!data) {
       return res.status(404).send(`${req.path} not found`);
     }
