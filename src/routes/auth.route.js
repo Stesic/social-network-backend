@@ -20,10 +20,8 @@ router.post("/auth/register", async (req, res) => {
       res.status(400).send({ error: "User already exist!!!" });
       return;
     }
-    console.log(req.body.password);
 
-    req.body.password = await bcrypt.hash(req.body.password, 8); //umesto u pre(save)...zato sto se i kod patch user promeni password
-    console.log(req.body.password);
+    // req.body.password = await bcrypt.hash(req.body.password, 8); //umesto u pre(save)...zato sto se i kod patch user promeni password
     // const registerData = await new Auth(req.body).save();
     const registerData = await new User(req.body).save();
 

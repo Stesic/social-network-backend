@@ -81,12 +81,14 @@ UserSchema.methods.generateAuthToken = function () {
   );
 };
 
-// UserSchema.pre("save", async function (next) {
-//   console.log("reee");
-//   const user = this;
-//   user.password = await bcrypt.hash(user.password, 8);
-//   next();
-// });
+UserSchema.pre("save", async function (next) {
+  const user = this;
+  if (!user.password.includes("$")) {
+    // is patch request
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
 
 UserSchema.statics.findByCredentials = async (model, email, password) => {
   const user = await model.findOne({
