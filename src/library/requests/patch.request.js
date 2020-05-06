@@ -27,7 +27,7 @@ const update = async (req, res, Model, allowedUpdates) => {
       modelData[update] = req.body[update];
     });
     modelData.owner = req.user._id;
-    console.log(modelData);
+
     res.status(201).send(modelData);
     modelData.save();
   } catch (error) {

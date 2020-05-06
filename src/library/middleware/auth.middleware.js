@@ -1,10 +1,13 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
-const Auth = require("../models/auth.model");
 
 const auth = async (req, res, next) => {
   try {
-    if (req.path === "/auth/register" || req.path === "/auth/login") {
+    if (
+      req.path === "/auth/register" ||
+      req.path === "/auth/login" ||
+      req.path === "/auth/password/reset"
+    ) {
       next();
       return;
     }

@@ -1,15 +1,17 @@
 const express = require("express");
+
 const Comment = require("../library/models/comment.model");
 
-const router = new express.Router();
 const getRequest = require("../library/requests/get.request");
 const postRequest = require("../library/requests/post.request");
 const patchRequest = require("../library/requests/patch.request");
 const deleteRequest = require("../library/requests/delete.request");
 
+const router = new express.Router();
+
 //GET ALL COMMENTS
 router.get("/comments", async (req, res) => {
-  getRequest.getAll(req, res, Comment, "body");
+  getRequest.getAll(req, res, Comment, "body", false);
 });
 
 //GET SINGLE COMMENT BY ID

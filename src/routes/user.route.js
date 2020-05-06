@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const User = require("../library/models/user.model");
 
 const getRequest = require("../library/requests/get.request");
@@ -7,9 +6,11 @@ const postRequest = require("../library/requests/post.request");
 const patchRequest = require("../library/requests/patch.request");
 const deleteRequest = require("../library/requests/delete.request");
 
+const router = express.Router();
+
 //GET ALL USERS
 router.get("/users", async (req, res) => {
-  getRequest.getAll(req, res, User, "fullName");
+  getRequest.getAll(req, res, User, "fullName", false);
 });
 
 //GET ME - LOGGED USER

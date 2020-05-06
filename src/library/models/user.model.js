@@ -36,7 +36,6 @@ const UserSchema = new mongoose.Schema(
     },
     avatarUrl: {
       type: String,
-      default: "https://via.placeholder.com/900x900",
     },
     about: {
       type: String,
@@ -57,6 +56,7 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre("save", async function (next) {
   const user = this;
   user.fullName = `${user.firstName} ${user.lastName}`;
+
   next();
 });
 
@@ -94,13 +94,12 @@ UserSchema.statics.findByCredentials = async (model, email, password) => {
   const user = await model.findOne({
     email,
   });
-
   if (user) {
     const isPasswordOk = await bcrypt.compare(password, user.password);
-    console.log(isPasswordOk);
 
     if (isPasswordOk) {
-      return user.generateAuthToken();
+      const token = user.generateAuthToken();
+      return { token, user };
     } else {
       throw new Error("Unable to login");
     }

@@ -1,16 +1,14 @@
 require("./db/mongoose");
-
 const express = require("express");
-const path = require("path");
 const cors = require("cors");
-const app = express();
-const personRoute = require("./routes/person.route");
+
 const userRoute = require("./routes/user.route");
 const authRoute = require("./routes/auth.route");
 const postRoute = require("./routes/post.route");
 const commentRoute = require("./routes/comment.route");
-const bodyParser = require("body-parser");
 const authMiddleware = require("./library/middleware/auth.middleware");
+
+const app = express();
 
 const PORT = process.env.PORT || 5500;
 
@@ -23,7 +21,6 @@ app.use(express.json());
 
 app.use(authRoute);
 app.use(userRoute);
-app.use(personRoute);
 app.use(postRoute);
 app.use(commentRoute);
 app.use(express.static("public"));
