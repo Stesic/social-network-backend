@@ -12,19 +12,26 @@ const getAll = async (req, res, Model, searchField, searchFieldRequired) => {
     if (searchQuery) {
       const filteredData = await Model.find({
         [searchField]: new RegExp(searchQuery, "i"),
+      })
+        .limit(limit)
+        .skip(offset);
+
+      const filteredDataTotal = await Model.countDocuments({
+        [searchField]: new RegExp(searchQuery, "i"),
       });
 
-      res.status(200).send({ data: filteredData, total: filteredData.length });
+      res.status(200).send({ data: filteredData, total: filteredDataTotal });
       return;
     }
     // all data
     const data = await Model.find().limit(limit).skip(offset);
+    const total = await Model.countDocuments();
 
     if (!data) {
       return res.status(404).send(`${req.path} not found`);
     }
 
-    res.status(200).send({ data, total: data.length });
+    res.status(200).send({ data, total });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
