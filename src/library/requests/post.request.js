@@ -5,7 +5,7 @@ const postNew = async (req, res, Model) => {
   });
   try {
     await modelData.save();
-    res.status(201).send(modelData);
+    res.status(201).send("The record has been successfully created.");
   } catch (error) {
     res.status(500).send({ error: error.message });
   }

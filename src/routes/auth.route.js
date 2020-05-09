@@ -1,8 +1,10 @@
 const express = require("express");
-const uniqueString = require("unique-string");
-const User = require("../library/models/user.model");
 const nodemailer = require("nodemailer");
+const uniqueString = require("unique-string");
+const HttpStatus = require("http-status-codes");
+
 const router = express.Router();
+const User = require("../library/models/user.model");
 
 router.post("/auth/register", async (req, res) => {
   try {
@@ -12,7 +14,7 @@ router.post("/auth/register", async (req, res) => {
       email,
     });
     if (userExist) {
-      res.status(400).send({ error: "User already exist!!!" });
+      res.status(409).send({ error: "User already exist!!!" });
       return;
     }
 
@@ -26,7 +28,7 @@ router.post("/auth/register", async (req, res) => {
       res.status(404).send("User not found");
     }
   } catch (error) {
-    res.status(500).send({ error: error });
+    res.status(500).send({ error: error.message });
   }
 });
 
@@ -35,7 +37,8 @@ router.post("/auth/login", async (req, res) => {
     let reqEmail = req.body.email;
     let reqPassword = req.body.password;
     if (!reqEmail || !reqPassword) {
-      throw new Error("404-email and password required");
+      res.status(400).send({ error: "Email and password required!!!" });
+      return;
     }
 
     const userData = await User.findByCredentials(User, reqEmail, reqPassword);
@@ -44,7 +47,7 @@ router.post("/auth/login", async (req, res) => {
     if (userToken) {
       res.status(200).send({ token: userToken });
     } else {
-      res.status(404).send("User not found, wrong email");
+      res.status(404).send("User not found, wrong email!!!");
     }
   } catch (error) {
     res.status(500).send({ error: error.message });
@@ -78,14 +81,15 @@ router.patch("/auth/password/reset", async (req, res) => {
       email,
     });
     if (!user) {
-      throw new Error("User not found!");
+      res.status(404).send("User not found");
+      return;
     }
     const uniquePass = uniqueString().substr(0, 8);
     user.password = uniquePass;
     user.save();
     sendNewPasswordToUser(email, user.password).catch(console.error);
     res
-      .status(201)
+      .status(200)
       .send({ data: "Password changed! Check your mail for new password." });
     // main().catch(console.error);
   } catch (error) {
@@ -104,7 +108,7 @@ router.patch("/auth/password/change", async (req, res) => {
     if (user) {
       user.password = newPassword;
       user.save();
-      res.status(201).send({ data: "Password changed!" });
+      res.status(200).send({ data: "Password changed!" });
     } else {
       res.status(404).send("User not found, wrong email");
     }

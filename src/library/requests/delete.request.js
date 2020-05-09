@@ -1,7 +1,7 @@
 const deleteOne = async (req, res, Model) => {
   const reqId = req.params.id;
   if (!reqId) {
-    return res.status(400).send("id missing - 400");
+    return res.status(400).send({ error: "Bad request - ID is missing!!!" });
   }
 
   try {
@@ -12,10 +12,12 @@ const deleteOne = async (req, res, Model) => {
       ? modelData._id
       : modelData.owner;
     if (modelDataOwner.toString() !== req.user._id.toString()) {
-      return res.status(403).send("You are not allowed to delete this data!!!");
+      return res
+        .status(403)
+        .send({ error: "You are not allowed to delete this data!!!" });
     }
 
-    res.status(200).send(modelData);
+    res.status(200).send("The records have been successfully deleted.");
     modelData.delete();
     modelData.save();
   } catch (error) {

@@ -5,7 +5,7 @@ const getAll = async (req, res, Model, searchField, searchFieldRequired) => {
   try {
     const searchQuery = req.query.q;
     if (searchFieldRequired && !searchQuery) {
-      return res.status(400).send("Bad request!");
+      return res.status(400).send({ error: "Bad request!!!" });
     }
 
     //filter data with search query value
@@ -28,7 +28,7 @@ const getAll = async (req, res, Model, searchField, searchFieldRequired) => {
     const total = await Model.countDocuments();
 
     if (!data) {
-      return res.status(404).send(`${req.path} not found`);
+      return res.status(404).send({ error: `${req.path} not found` });
     }
 
     res.status(200).send({ data, total });
@@ -42,9 +42,9 @@ const getSingle = async (req, res, Model) => {
   try {
     const data = await Model.findById(postId);
     if (!data) {
-      return res.status(404).send(`${req.path} not found`);
+      return res.status(404).send({ error: `${req.path} not found` });
     }
-    res.status(200).send(data);
+    res.status(200).send({ data });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -72,7 +72,7 @@ const getRelationAll = async (req, res, Model, populateValue) => {
       .execPopulate();
 
     if (!data[populateValue]) {
-      res.status(404).send(`${populateValue} not found`);
+      res.status(404).send({ error: `${req.path} not found` });
       return;
     }
     const total = data[populateValue].length;

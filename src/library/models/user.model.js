@@ -26,13 +26,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       minlength: 2,
       required: true,
-      // lowercase: true,
     },
     lastName: {
       type: String,
       minlength: 2,
       required: true,
-      // lowercase: true,
     },
     avatarUrl: {
       type: String,
