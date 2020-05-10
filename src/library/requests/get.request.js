@@ -13,6 +13,7 @@ const getAll = async (req, res, Model, searchField, searchFieldRequired) => {
       const filteredData = await Model.find({
         [searchField]: new RegExp(searchQuery, "i"),
       })
+        .sort([["createdAt", -1]])
         .limit(limit)
         .skip(offset);
 
@@ -24,7 +25,11 @@ const getAll = async (req, res, Model, searchField, searchFieldRequired) => {
       return;
     }
     // all data
-    const data = await Model.find().limit(limit).skip(offset);
+    const data = await Model.find()
+      .sort([["createdAt", -1]])
+      .limit(limit)
+      .skip(offset);
+
     const total = await Model.countDocuments();
 
     if (!data) {
@@ -43,6 +48,9 @@ const getSingle = async (req, res, Model) => {
     const data = await Model.findById(postId);
     if (!data) {
       return res.status(404).send({ error: `${req.path} not found` });
+    }
+    if (data.password) {
+      data.password = "*******";
     }
     res.status(200).send({ data });
   } catch (error) {
@@ -65,7 +73,7 @@ const getRelationAll = async (req, res, Model, populateValue) => {
           limit: parseInt(limit),
           skip: parseInt(offset),
           sort: {
-            createdAt: 1, // -1 desc, 1 asc
+            createdAt: -1, // -1 desc, 1 asc
           },
         },
       })

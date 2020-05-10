@@ -17,7 +17,9 @@ const deleteOne = async (req, res, Model) => {
         .send({ error: "You are not allowed to delete this data!!!" });
     }
 
-    res.status(200).send("The records have been successfully deleted.");
+    res
+      .status(200)
+      .send({ data: "The records have been successfully deleted." });
     modelData.delete();
     modelData.save();
   } catch (error) {
