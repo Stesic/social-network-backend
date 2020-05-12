@@ -1,6 +1,7 @@
-require("./db/mongoose");
 const express = require("express");
 const cors = require("cors");
+
+require("./db/mongoose");
 
 const userRoute = require("./routes/user.route");
 const authRoute = require("./routes/auth.route");
@@ -8,11 +9,16 @@ const postRoute = require("./routes/post.route");
 const commentRoute = require("./routes/comment.route");
 const authMiddleware = require("./library/middleware/auth.middleware");
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./doc/swagger.json");
+
 const app = express();
 
 const PORT = process.env.PORT || 5500;
 
 app.use(cors());
+
+app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(authMiddleware);
 

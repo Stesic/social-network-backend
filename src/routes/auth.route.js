@@ -1,7 +1,10 @@
 const express = require("express");
+
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+
 const nodemailer = require("nodemailer");
 const uniqueString = require("unique-string");
-const HttpStatus = require("http-status-codes");
 
 const router = express.Router();
 const User = require("../library/models/user.model");
@@ -25,7 +28,7 @@ router.post("/auth/register", async (req, res) => {
     if (regToken) {
       res.status(200).send({ token: regToken });
     } else {
-      res.status(404).send("User not found");
+      res.status(404).send({ error: "User not found" });
     }
   } catch (error) {
     res.status(500).send({ error: error.message });

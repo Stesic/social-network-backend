@@ -4,6 +4,7 @@ const User = require("../models/user.model");
 const auth = async (req, res, next) => {
   try {
     if (
+      req.path === "/api" ||
       req.path === "/auth/register" ||
       req.path === "/auth/login" ||
       req.path === "/auth/password/reset"
