@@ -12,6 +12,18 @@
     {
       "name": "Auth",
       "description": "API for authentication"
+    },
+    {
+      "name": "Post",
+      "description": "API for Post"
+    },
+    {
+      "name": "User",
+      "description": "API for User"
+    },
+    {
+      "name": "Comment",
+      "description": "API for Comment"
     }
   ],
   "servers": [
@@ -130,9 +142,234 @@
           }
         }
       }
+    },
+    "/auth/password/reset": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Reset Password",
+        "description": "Reset user password",
+        "requestBody": {
+          "required": true,
+          "description": "Email is required for password reset",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/auth/password/change": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Change Password",
+        "description": "Change user password",
+        "requestBody": {
+          "required": true,
+          "description": "Body for change password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/posts": {
+      "post": {
+        "tags": ["Post"],
+        "summary": "Create New Post",
+        "description": "Create new video, text, image post",
+        "requestBody": {
+          "required": true,
+          "description": "Post body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Post created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Created_201"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Post"],
+        "summary": "Get All Posts",
+        "description": "Get all saved posts",
+        "responses": {
+          "200": {
+            "description": "All posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "Get Single Post",
+        "description": "Get Single Post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post ID",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Single Post",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "bearerAuth": []
+    }
+  ],
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      }
+    },
+
     "schemas": {
       "Register": {
         "type": "object",
@@ -175,6 +412,104 @@
             "minimum": 7,
             "example": "1234567",
             "required": true
+          }
+        }
+      },
+      "ResetPassword": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john@gmail.com",
+            "required": true
+          }
+        }
+      },
+      "ChangePassword": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john@gmail.com",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "example": "1234567",
+            "required": true
+          },
+          "newPassword": {
+            "type": "string",
+            "example": "7654321",
+            "required": true
+          }
+        }
+      },
+      "PostCreate": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "text",
+            "required": true,
+            "description": "type can be image,video or text"
+          },
+          "src": {
+            "type": "string",
+            "example": "new text post",
+            "required": true,
+            "description": "video src is embed youtube video, image src  is base64 format"
+          }
+        }
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "5eba6e8fec5d84001717a207"
+          },
+          "type": {
+            "type": "string",
+            "example": "text",
+            "description": "type can be image,video or text"
+          },
+          "src": {
+            "type": "string",
+            "example": "new text post",
+            "description": "video src is embed youtube video, image src  is base64 format"
+          },
+          "owner": {
+            "type": "string",
+            "example": "5ea53939273df12f5cd4b200"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          }
+        }
+      },
+      "Success_200": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "example": "Success"
+          }
+        }
+      },
+      "Created_201": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "example": "Created"
           }
         }
       },

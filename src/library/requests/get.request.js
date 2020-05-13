@@ -1,7 +1,6 @@
 const getAll = async (req, res, Model, searchField, searchFieldRequired) => {
   const limit = Number.parseInt(req.query.limit) || 10;
   const offset = Number.parseInt(req.query.offset) || 0;
-
   try {
     const searchQuery = req.query.q;
     if (searchFieldRequired && !searchQuery) {

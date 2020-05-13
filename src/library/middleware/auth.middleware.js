@@ -12,7 +12,6 @@ const auth = async (req, res, next) => {
       next();
       return;
     }
-
     const authToken = req.header("Authorization").replace("Bearer ", "");
     const apiKey = req.header("x-api-key");
 
