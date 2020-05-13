@@ -170,6 +170,16 @@
               }
             }
           },
+          "403": {
+            "description": "403 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
+                }
+              }
+            }
+          },
           "404": {
             "description": "404 Error",
             "content": {
@@ -216,6 +226,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
                 }
               }
             }
@@ -286,6 +306,20 @@
         "tags": ["Post"],
         "summary": "Get All Posts",
         "description": "Get all saved posts",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit per page",
+            "default": 10
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip number of",
+            "default": 0
+          }
+        ],
         "responses": {
           "200": {
             "description": "All posts",
@@ -346,9 +380,249 @@
             "description": "Internal server error"
           }
         }
+      },
+      "patch": {
+        "tags": ["Post"],
+        "summary": "Update Post",
+        "description": "Update Single Post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Post body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "All Posts By Post Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            },
+            "description": "Internal server error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Post"],
+        "summary": "Delete Post",
+        "description": "Delete Single Post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post Deleted Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/posts/{id}/comments": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "Get All Post Comments",
+        "description": "Get Post Comments",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post ID",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit per page",
+            "default": 10
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip number of",
+            "default": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single Post Comments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            },
+            "description": "Internal server error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/posts/type": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "Get All Post Filtered By Type",
+        "description": "Filtered Posts By Type",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Query values: video, image or text",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit per page",
+            "default": 10
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip number of",
+            "default": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Posts By Post Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            },
+            "description": "Internal server error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
       }
     }
   },
+
   "security": [
     {
       "ApiKeyAuth": []
@@ -458,7 +732,22 @@
             "type": "string",
             "example": "new text post",
             "required": true,
-            "description": "video src is embed youtube video, image src  is base64 format"
+            "description": "video src is embed youtube video, image src  is base64 format",
+            "format": "string || binary"
+          }
+        }
+      },
+      "PostUpdate": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "text"
+          },
+          "src": {
+            "type": "string",
+            "format": "string || binary",
+            "example": "New text will update post"
           }
         }
       },
@@ -495,6 +784,41 @@
           }
         }
       },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "5ea55b3e79152d0017d846e4",
+            "description": "Comment ID"
+          },
+          "postId": {
+            "type": "5ea5490c793d2f00176228da",
+            "example": "text",
+            "description": "PostID"
+          },
+          "body": {
+            "type": "string",
+            "example": "new comment"
+          },
+          "owner": {
+            "type": "string",
+            "example": "5ea53939273df12f5cd4b200",
+            "description": "User that has commented post"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          }
+        }
+      },
+
       "Success_200": {
         "type": "object",
         "properties": {
@@ -519,6 +843,15 @@
           "error": {
             "type": "string",
             "example": "Bad Request"
+          }
+        }
+      },
+      "error_403": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Not Allowed"
           }
         }
       },
