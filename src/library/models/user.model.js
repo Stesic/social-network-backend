@@ -54,7 +54,10 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre("save", async function (next) {
   const user = this;
   user.fullName = `${user.firstName} ${user.lastName}`;
-
+  if (!user.password.includes("$")) {
+    // is patch request
+    user.password = await bcrypt.hash(user.password, 8);
+  }
   next();
 });
 
@@ -78,15 +81,6 @@ UserSchema.methods.generateAuthToken = function () {
     "1vaHd3v"
   );
 };
-
-UserSchema.pre("save", async function (next) {
-  const user = this;
-  if (!user.password.includes("$")) {
-    // is patch request
-    user.password = await bcrypt.hash(user.password, 8);
-  }
-  next();
-});
 
 UserSchema.statics.findByCredentials = async (model, email, password) => {
   const user = await model.findOne({

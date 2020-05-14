@@ -8,18 +8,26 @@
     },
     "version": "1.0"
   },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "bearerAuth": []
+    }
+  ],
   "tags": [
     {
       "name": "Auth",
       "description": "API for authentication"
     },
     {
-      "name": "Post",
-      "description": "API for Post"
-    },
-    {
       "name": "User",
       "description": "API for User"
+    },
+    {
+      "name": "Post",
+      "description": "API for Post"
     },
     {
       "name": "Comment",
@@ -263,6 +271,343 @@
         }
       }
     },
+    "/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get All Users",
+        "description": "Get all registered users",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit per page",
+            "default": 10
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip number of",
+            "default": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get Single User",
+        "description": "Get Single User",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update User",
+        "description": "Update Single User",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete User",
+        "description": "Delete Single User",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/posts": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get All User Posts",
+        "description": "Get User Posts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit per page",
+            "default": 10
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip number of",
+            "default": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/comments": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get All User Comments",
+        "description": "Get User Comments",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit per page",
+            "default": 10
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip number of",
+            "default": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts": {
       "post": {
         "tags": ["Post"],
@@ -331,6 +676,24 @@
               }
             }
           },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
           "500": {
             "content": {
               "application/json": {
@@ -338,8 +701,7 @@
                   "$ref": "#/components/schemas/error_500"
                 }
               }
-            },
-            "description": "Internal server error"
+            }
           }
         }
       }
@@ -365,6 +727,15 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
                 }
               }
             }
@@ -620,17 +991,279 @@
           }
         }
       }
+    },
+    "/comments": {
+      "post": {
+        "tags": ["Comment"],
+        "summary": "Post New Comment",
+        "description": "Comment Post",
+        "requestBody": {
+          "required": true,
+          "description": "Comment body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Post created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Created_201"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Comment"],
+        "summary": "Get All Comments",
+        "description": "Get all Post Comments",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit per page",
+            "default": 10
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Skip number of",
+            "default": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Comments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/comment/{id}": {
+      "get": {
+        "tags": ["Comment"],
+        "summary": "Get Single Comment",
+        "description": "Get Single Comment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Comment ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single Comment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Comment"],
+        "summary": "Update Comment",
+        "description": "Update Single Comment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Comment ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Comment body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Comment"],
+        "summary": "Delete Comment",
+        "description": "Delete Single Comment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Comment ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment Deleted Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_403"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
 
-  "security": [
-    {
-      "ApiKeyAuth": []
-    },
-    {
-      "bearerAuth": []
-    }
-  ],
   "components": {
     "securitySchemes": {
       "bearerAuth": {
@@ -719,36 +1352,86 @@
           }
         }
       },
-      "PostCreate": {
+      "User": {
         "type": "object",
         "properties": {
-          "type": {
+          "_id": {
             "type": "string",
-            "example": "text",
-            "required": true,
-            "description": "type can be image,video or text"
+            "format": "binary",
+            "example": "5eba6e8fec5d84001717a207"
           },
-          "src": {
+          "avatarUrl": {
             "type": "string",
-            "example": "new text post",
-            "required": true,
-            "description": "video src is embed youtube video, image src  is base64 format",
-            "format": "string || binary"
+            "format": "byte",
+            "example": "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John ",
+            "minimum": 2,
+            "required": true
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Smith",
+            "minimum": 2,
+            "required": true
+          },
+          "fullName": {
+            "type": "string",
+            "example": "John Smith",
+            "minimum": 2
+          },
+          "about": {
+            "type": "string",
+            "example": "something about yourself",
+            "minimum": 10
+          },
+          "email": {
+            "type": "string",
+            "example": "john@gmail.com",
+            "required": true
+          },
+          "prefix": {
+            "type": "string",
+            "expample": "Developer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
           }
         }
       },
-      "PostUpdate": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "example": "text"
-          },
-          "src": {
-            "type": "string",
-            "format": "string || binary",
-            "example": "New text will update post"
-          }
+      "UserUpdate": {
+        "firstName": {
+          "type": "string",
+          "example": "John ",
+          "minimum": 2
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Smith",
+          "minimum": 2
+        },
+        "avatarUrl": {
+          "type": "string",
+          "format": "byte",
+          "example": "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+        },
+        "about": {
+          "type": "string",
+          "example": "something about yourself",
+          "minimum": 10
+        },
+        "prefix": {
+          "type": "string",
+          "expample": "Developer"
         }
       },
       "Post": {
@@ -756,6 +1439,7 @@
         "properties": {
           "_id": {
             "type": "string",
+            "format": "binary",
             "example": "5eba6e8fec5d84001717a207"
           },
           "type": {
@@ -784,17 +1468,52 @@
           }
         }
       },
+      "PostCreate": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "text",
+            "required": true,
+            "description": "type can be image,video or text"
+          },
+          "src": {
+            "type": "string",
+            "example": "new text post",
+            "required": true,
+            "description": "video src is embed youtube video, image src  is base64 format",
+            "format": "string || byte"
+          }
+        }
+      },
+      "PostUpdate": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "text"
+          },
+          "src": {
+            "type": "string",
+            "format": "string || byte",
+            "example": "New text will update post"
+          }
+        }
+      },
+
       "Comment": {
         "type": "object",
         "properties": {
           "_id": {
             "type": "string",
+            "format": "binary",
             "example": "5ea55b3e79152d0017d846e4",
             "description": "Comment ID"
           },
           "postId": {
             "type": "5ea5490c793d2f00176228da",
             "example": "text",
+            "format": "binary",
             "description": "PostID"
           },
           "body": {
@@ -803,6 +1522,7 @@
           },
           "owner": {
             "type": "string",
+            "format": "binary",
             "example": "5ea53939273df12f5cd4b200",
             "description": "User that has commented post"
           },
@@ -815,6 +1535,31 @@
             "type": "string",
             "format": "date",
             "example": "2020-05-12T09:38:23.104Z"
+          }
+        }
+      },
+      "CommentCreate": {
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "text",
+            "format": "binary",
+            "example": "5ea5490c793d2f00176228da",
+            "required": true
+          },
+          "body": {
+            "type": "string",
+            "example": "new comment",
+            "required": true
+          }
+        }
+      },
+      "CommentUpdate": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string",
+            "example": "comment text"
           }
         }
       },

@@ -2,7 +2,6 @@ const express = require("express");
 const User = require("../library/models/user.model");
 
 const getRequest = require("../library/requests/get.request");
-const postRequest = require("../library/requests/post.request");
 const patchRequest = require("../library/requests/patch.request");
 const deleteRequest = require("../library/requests/delete.request");
 
@@ -17,6 +16,7 @@ router.get("/users", async (req, res) => {
 router.get("/users/me/", async (req, res) => {
   try {
     const me = req.user;
+    me.password = "*******";
     res.status(200).send(me);
   } catch (error) {
     res.status(500).send({ error: error.message });

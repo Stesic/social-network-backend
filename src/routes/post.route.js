@@ -35,7 +35,7 @@ router.post("/posts", async (req, res) => {
 
 //PATCH UPDATE POST
 router.patch("/posts/:id", async (req, res) => {
-  const allowedUpdates = ["type", "url"];
+  const allowedUpdates = ["type", "src"];
   patchRequest.update(req, res, Post, allowedUpdates);
 });
 
