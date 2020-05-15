@@ -109,7 +109,7 @@ router.patch("/auth/password/change", async (req, res) => {
       user.save();
       res.status(200).send({ data: "Password changed!" });
     } else {
-      res.status(404).send("User not found, wrong email");
+      res.status(404).send({ error: "User not found, wrong email" });
     }
   } catch (error) {
     res.status(500).send({ error: error.message });
