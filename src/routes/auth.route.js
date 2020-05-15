@@ -81,7 +81,7 @@ router.patch("/auth/password/reset", async (req, res) => {
       email,
     });
     if (!user) {
-      res.status(404).send("User not found");
+      res.status(404).send({ error: "User Not Exist" });
       return;
     }
     const uniquePass = uniqueString().substr(0, 8);
@@ -91,7 +91,6 @@ router.patch("/auth/password/reset", async (req, res) => {
     res
       .status(200)
       .send({ data: "Password changed! Check your mail for new password." });
-    // main().catch(console.error);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -102,9 +101,9 @@ router.patch("/auth/password/change", async (req, res) => {
     let reqEmail = req.body.email;
     let reqPassword = req.body.password;
     let newPassword = req.body.newPassword;
-
     const userData = await User.findByCredentials(User, reqEmail, reqPassword);
     const user = userData.user;
+
     if (user) {
       user.password = newPassword;
       user.save();
