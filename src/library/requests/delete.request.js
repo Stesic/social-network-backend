@@ -21,7 +21,6 @@ const deleteOne = async (req, res, Model) => {
       .status(200)
       .send({ data: "The records have been successfully deleted." });
     modelData.delete();
-    modelData.save();
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
