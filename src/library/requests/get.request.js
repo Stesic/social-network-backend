@@ -77,7 +77,6 @@ const getRelationAll = async (req, res, Model, populateValue) => {
         },
       })
       .execPopulate();
-
     if (!data[populateValue]) {
       res.status(404).send({ error: `${req.path} not found` });
       return;

@@ -1547,8 +1547,8 @@
             "description": "Comment ID"
           },
           "postId": {
-            "type": "5ea5490c793d2f00176228da",
-            "example": "text",
+            "type": "text",
+            "example": "5ea5490c793d2f00176228da",
             "format": "binary",
             "description": "PostID"
           },

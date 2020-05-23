@@ -1,6 +1,7 @@
 const express = require("express");
 
 const Post = require("../library/models/post.model");
+const Comment = require("../library/models/comment.model");
 
 const getRequest = require("../library/requests/get.request");
 const postRequest = require("../library/requests/post.request");
@@ -41,7 +42,7 @@ router.patch("/posts/:id", async (req, res) => {
 
 //DELETE SINGLE POST
 router.delete("/posts/:id", async (req, res) => {
-  deleteRequest.deleteOne(req, res, Post);
+  deleteRequest.deleteOne(req, res, Post, Comment, "comments");
 });
 
 module.exports = router;
