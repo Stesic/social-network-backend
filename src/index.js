@@ -7,6 +7,7 @@ const userRoute = require("./routes/user.route");
 const authRoute = require("./routes/auth.route");
 const postRoute = require("./routes/post.route");
 const commentRoute = require("./routes/comment.route");
+const messageRoute = require("./routes/message.route");
 const authMiddleware = require("./library/middleware/auth.middleware");
 
 const swaggerUi = require("swagger-ui-express");
@@ -29,6 +30,7 @@ app.use(authRoute);
 app.use(userRoute);
 app.use(postRoute);
 app.use(commentRoute);
+app.use(messageRoute);
 app.use(express.static("public"));
 
 //handle 404

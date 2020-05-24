@@ -73,6 +73,18 @@ UserSchema.virtual("comments", {
   foreignField: "owner",
 });
 
+UserSchema.virtual("sentMessages", {
+  ref: "SentMessage",
+  localField: "_id",
+  foreignField: "owner",
+});
+
+UserSchema.virtual("receivedMessages", {
+  ref: "ReceivedMessage",
+  localField: "_id",
+  foreignField: "owner",
+});
+
 UserSchema.methods.generateAuthToken = function () {
   const user = this;
   const { _id, firstName, lastName, email, createdAt, updatedAt } = user;
