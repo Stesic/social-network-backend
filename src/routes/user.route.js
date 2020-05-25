@@ -61,6 +61,11 @@ router.patch("/users/:id", async (req, res) => {
   patchRequest.update(req, res, User, allowedUpdates);
 });
 
+router.patch("/users/:id/last-active", async (req, res) => {
+  const allowedUpdates = ["lastActive"];
+  patchRequest.update(req, res, User, allowedUpdates);
+});
+
 //DELETE SINGLE USER
 router.delete("/users/:id", (req, res) => {
   deleteRequest.deleteOne(req, res, User);

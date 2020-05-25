@@ -45,6 +45,9 @@ const UserSchema = new mongoose.Schema(
     prefix: {
       type: String,
     },
+    lastActive: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

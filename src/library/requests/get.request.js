@@ -81,6 +81,7 @@ const getRelationAll = async (req, res, Model, populateValue) => {
       res.status(404).send({ error: `${req.path} not found` });
       return;
     }
+
     const total = data[populateValue].length;
     res.status(200).send({ data: data[populateValue], total });
   } catch (error) {
