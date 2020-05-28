@@ -32,6 +32,10 @@
     {
       "name": "Comment",
       "description": "API for Comment"
+    },
+    {
+      "name": "Message",
+      "description": "API for Message"
     }
   ],
   "servers": [
@@ -1297,6 +1301,165 @@
           }
         }
       }
+    },
+    "messages/sent/{senderID}/{receiverID}": {
+      "get": {
+        "tags": ["Message"],
+        "summary": "Get User Sent Messages to Single Receiver",
+        "description": "Sent Messages to Single Receiver",
+        "parameters": [
+          {
+            "name": "senderID",
+            "in": "path",
+            "description": "Id of message Sender",
+            "required": true
+          },
+          {
+            "name": "receiverID",
+            "in": "path",
+            "description": "Id of message Receiver",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "messages/receiver/{senderID}/{receiverID}": {
+      "get": {
+        "tags": ["Message"],
+        "summary": "Get User Received Messages from Single Sender",
+        "description": "Received Messages from Single Sender",
+        "parameters": [
+          {
+            "name": "senderID",
+            "in": "path",
+            "description": "Id of message Sender",
+            "required": true
+          },
+          {
+            "name": "receiverID",
+            "in": "path",
+            "description": "Id of message Receiver",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "messages/send": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Message",
+        "description": "Send Message",
+        "requestBody": {
+          "required": true,
+          "description": "Send Message to Single Receiver",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Created_201"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_400"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_409"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
 
@@ -1441,6 +1604,12 @@
             "type": "string",
             "format": "date",
             "example": "2020-05-12T09:38:23.104Z"
+          },
+          "lastActive": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z",
+            "description": "Shows last user activity"
           }
         }
       },
@@ -1547,7 +1716,7 @@
             "description": "Comment ID"
           },
           "postId": {
-            "type": "text",
+            "type": "string",
             "example": "5ea5490c793d2f00176228da",
             "format": "binary",
             "description": "PostID"
@@ -1574,11 +1743,12 @@
           }
         }
       },
+      
       "CommentCreate": {
         "type": "object",
         "properties": {
           "postId": {
-            "type": "text",
+            "type": "string",
             "format": "binary",
             "example": "5ea5490c793d2f00176228da",
             "required": true
@@ -1596,6 +1766,65 @@
           "body": {
             "type": "string",
             "example": "comment text"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "binary",
+            "example": "5ea55b3e79152d0017d846e4",
+            "description": "Message ID"
+          },
+          "owner": {
+            "type": "string",
+            "example": "5ea5490c793d2f00176228da",
+            "format": "binary",
+            "description": "Message Owner - Sender ID"
+          },
+          "to": {
+            "type": "string",
+            "example": "5ea5490c793d2f00176228da",
+            "format": "binary",
+            "description": "Send message to - Receiver ID"
+          },
+          "body": {
+            "type": "string",
+            "example": "new message"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          }
+        }
+      },
+      "MessageCreate": {
+        "type": "object",
+        "properties": {
+          "senderID": {
+            "type": "string",
+            "format": "binary",
+            "example": "5ea5490c793d2f00176228da",
+            "required": true
+          },
+          "receiverID": {
+            "type": "string",
+            "format": "binary",
+            "example": "5ebf8d50271a170017b60731",
+            "required": true
+          },
+          "body": {
+            "type": "string",
+            "example": "new message",
+            "required": true
           }
         }
       },

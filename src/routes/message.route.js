@@ -1,7 +1,6 @@
 const express = require("express");
 const User = require("../library/models/user.model");
 const Messages = require("../library/models/message.model");
-const getRequest = require("../library/requests/get.request");
 
 const SentMessage = Messages.sent;
 const ReceivedMessage = Messages.received;

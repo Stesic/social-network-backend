@@ -39,15 +39,7 @@ router.get("/users/:id/comments", async (req, res) => {
   getRequest.getRelationAll(req, res, User, "comments");
 });
 
-//GET USER SENT MESSAGES
-router.get("/users/:id/sent-messages", async (req, res) => {
-  getRequest.getRelationAll(req, res, User, "sentMessages");
-});
 
-//GET USER RECEIVED MESSAGES
-router.get("/users/:id/received-messages", async (req, res) => {
-  getRequest.getRelationAll(req, res, User, "receivedMessages");
-});
 
 //PATCH UPDATE USER
 router.patch("/users/:id", async (req, res) => {
