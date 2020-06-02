@@ -8,10 +8,13 @@ const SentMessageSchema = new mongoose.Schema(
       ref: "User",
     },
     to: {
-      type: mongoose.Schema.Types.ObjectId,
+      // type: mongoose.Schema.Types.ObjectId,
+      type: String,
+      required: true,
     },
     body: {
       type: String,
+      required: true,
     },
   },
   {
@@ -27,11 +30,16 @@ const ReceivedMessageSchema = new mongoose.Schema(
       ref: "User",
     },
     from: {
-      type: mongoose.Schema.Types.ObjectId,
+      // type: mongoose.Schema.Types.ObjectId,
+      type: String,
       required: true,
     },
     body: {
       type: String,
+      required: true,
+    },
+    seen: {
+      type: Boolean,
       required: true,
     },
   },

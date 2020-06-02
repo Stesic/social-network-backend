@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../library/models/user.model");
 const Messages = require("../library/models/message.model");
+ObjectID = require("mongodb").ObjectID;
 
 const SentMessage = Messages.sent;
 const ReceivedMessage = Messages.received;
@@ -25,6 +26,7 @@ router.post("/messages/send", async (req, res) => {
     owner: receiverID,
     from: senderID,
     body: msgBody,
+    seen: false,
   });
 
   try {
@@ -52,20 +54,17 @@ router.get("/messages/sent/:senderID/:receiverID", async (req, res) => {
             createdAt: 1, // -1 desc, 1 asc
           },
         },
+        match: { to: receiverID },
       })
       .execPopulate();
+
     if (!sentData["sentMessages"]) {
       res.status(404).send({ error: `${req.path} not found` });
       return;
     }
 
-    const messagesToSingleReceiver = sentData["sentMessages"].filter(
-      (single) => {
-        return single.to.toString() === receiverID;
-      }
-    );
     res.status(200).send({
-      data: messagesToSingleReceiver,
+      data: sentData["sentMessages"],
     });
   } catch (error) {
     res.status(500).send({ error: error.message });
@@ -88,19 +87,69 @@ router.get("/messages/received/:senderID/:receiverID", async (req, res) => {
             createdAt: 1, // -1 desc, 1 asc
           },
         },
+        match: { from: senderID },
       })
       .execPopulate();
     if (!receivedData["receivedMessages"]) {
       res.status(404).send({ error: `${req.path} not found` });
       return;
     }
-    const messagesFromSingleSender = receivedData["receivedMessages"].filter(
-      (single) => {
-        return single.from.toString() === senderID;
-      }
-    );
+
     res.status(200).send({
-      data: messagesFromSingleSender,
+      data: receivedData["receivedMessages"],
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+//GET USER UNREAD MESSAGES NUMBER
+router.get("/messages/unread/:receiverID", async (req, res) => {
+  const receiverID = req.params.receiverID;
+  //
+  try {
+    const model = await User.findById(receiverID);
+
+    const receivedData = await model
+      .populate({
+        path: "receivedMessages",
+        match: { seen: false },
+      })
+      .execPopulate();
+    if (!receivedData["receivedMessages"]) {
+      res.status(404).send({ error: `${req.path} not found` });
+      return;
+    }
+    const totalUnreadMessages = receivedData["receivedMessages"].length;
+    res.status(200).send({
+      data: totalUnreadMessages,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+//GET USER UNREAD MESSAGES NUMBER FROM SINGLE SENDER
+router.get("/messages/unread/:senderID/:receiverID", async (req, res) => {
+  const receiverID = req.params.receiverID;
+  const senderID = req.params.senderID;
+
+  try {
+    const model = await User.findById(receiverID);
+
+    const receivedData = await model
+      .populate({
+        path: "receivedMessages",
+        match: { seen: false, from: senderID },
+      })
+      .execPopulate();
+    if (!receivedData["receivedMessages"]) {
+      res.status(404).send({ error: `${req.path} not found` });
+      return;
+    }
+    const totalUnreadMessages = receivedData["receivedMessages"].length;
+    res.status(200).send({
+      data: totalUnreadMessages,
     });
   } catch (error) {
     res.status(500).send({ error: error.message });
