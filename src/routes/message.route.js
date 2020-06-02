@@ -40,8 +40,11 @@ router.post("/messages/send", async (req, res) => {
 
 //GET USER SENT MESSAGES TO SINGLE RECEIVER
 router.get("/messages/sent/:senderID/:receiverID", async (req, res) => {
+  const limit = Number.parseInt(req.query.limit) || 10;
+  const offset = Number.parseInt(req.query.offset) || 0;
   const receiverID = req.params.receiverID;
   const senderID = req.params.senderID;
+
   //
   try {
     const model = await User.findById(senderID);
@@ -49,12 +52,14 @@ router.get("/messages/sent/:senderID/:receiverID", async (req, res) => {
     const sentData = await model
       .populate({
         path: "sentMessages",
+        match: { to: receiverID },
         options: {
+          limit: parseInt(limit),
+          skip: parseInt(offset),
           sort: {
             createdAt: 1, // -1 desc, 1 asc
           },
         },
-        match: { to: receiverID },
       })
       .execPopulate();
 
@@ -75,6 +80,9 @@ router.get("/messages/sent/:senderID/:receiverID", async (req, res) => {
 router.get("/messages/received/:senderID/:receiverID", async (req, res) => {
   const receiverID = req.params.receiverID;
   const senderID = req.params.senderID;
+
+  const limit = Number.parseInt(req.query.limit) || 10;
+  const offset = Number.parseInt(req.query.offset) || 0;
   //
   try {
     const model = await User.findById(receiverID);
@@ -82,12 +90,14 @@ router.get("/messages/received/:senderID/:receiverID", async (req, res) => {
     const receivedData = await model
       .populate({
         path: "receivedMessages",
+        match: { from: senderID },
         options: {
+          limit: parseInt(limit),
+          skip: parseInt(offset),
           sort: {
             createdAt: 1, // -1 desc, 1 asc
           },
         },
-        match: { from: senderID },
       })
       .execPopulate();
     if (!receivedData["receivedMessages"]) {
@@ -150,6 +160,38 @@ router.get("/messages/unread/:senderID/:receiverID", async (req, res) => {
     const totalUnreadMessages = receivedData["receivedMessages"].length;
     res.status(200).send({
       data: totalUnreadMessages,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+//READ ALL MESSAGES FROM SINGLE SENDER
+router.patch("/messages/read/:senderID/:receiverID", async (req, res) => {
+  const receiverID = req.params.receiverID;
+  const senderID = req.params.senderID;
+
+  try {
+    const model = await User.findById(receiverID);
+
+    const receivedData = await model
+      .populate({
+        path: "receivedMessages",
+        match: { seen: false, from: senderID },
+      })
+      .execPopulate();
+    if (!receivedData["receivedMessages"]) {
+      res.status(404).send({ error: `${req.path} not found` });
+      return;
+    }
+    receivedData["receivedMessages"].forEach(async (receivedMsg) => {
+      const messageID = receivedMsg._id;
+      const messageModel = await ReceivedMessage.findById(messageID);
+      messageModel.seen = true;
+      messageModel.save();
+    });
+    res.status(200).send({
+      data: "All messages are read successfully",
     });
   } catch (error) {
     res.status(500).send({ error: error.message });
