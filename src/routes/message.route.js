@@ -57,7 +57,7 @@ router.get("/messages/sent/:senderID/:receiverID", async (req, res) => {
           limit: parseInt(limit),
           skip: parseInt(offset),
           sort: {
-            createdAt: 1, // -1 desc, 1 asc
+            createdAt: -1, // -1 desc, 1 asc
           },
         },
       })
@@ -95,7 +95,7 @@ router.get("/messages/received/:senderID/:receiverID", async (req, res) => {
           limit: parseInt(limit),
           skip: parseInt(offset),
           sort: {
-            createdAt: 1, // -1 desc, 1 asc
+            createdAt: -1, // -1 desc, 1 asc
           },
         },
       })
