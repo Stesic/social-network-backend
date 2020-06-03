@@ -1326,7 +1326,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/MessageSent"
                 }
               }
             }
@@ -1352,7 +1352,7 @@
         }
       }
     },
-    "messages/receiver/{senderID}/{receiverID}": {
+    "messages/received/{senderID}/{receiverID}": {
       "get": {
         "tags": ["Message"],
         "summary": "Get User Received Messages from Single Sender",
@@ -1376,7 +1376,151 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/MessageReceived"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "messages/unread/{receiverID}": {
+      "get": {
+        "tags": ["Message"],
+        "summary": "Get Received Unread Messages Number",
+        "description": "Total Received Messages",
+        "parameters": [
+          {
+            "name": "receiverID",
+            "in": "path",
+            "description": "Id of messages Receiver",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalData"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "messages/unread/{senderID}/{receiverID}": {
+      "get": {
+        "tags": ["Message"],
+        "summary": "Get Received Unread Messages Number From Single Sender",
+        "description": "Total Received Messages",
+        "parameters": [
+          {
+            "name": "senderID",
+            "in": "path",
+            "description": "Id of message Sender",
+            "required": true
+          },
+          {
+            "name": "receiverID",
+            "in": "path",
+            "description": "Id of messages Receiver",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalData"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_404"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "messages/read/{senderID}/{receiverID}": {
+      "patch": {
+        "tags": ["Message"],
+        "summary": "Read All Messages From Single Sender",
+        "description": "Read Messages From Single Sender (set 'seen' status to true",
+        "parameters": [
+          {
+            "name": "senderID",
+            "in": "path",
+            "description": "Id of message Sender",
+            "required": true
+          },
+          {
+            "name": "receiverID",
+            "in": "path",
+            "description": "Id of messages Receiver",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success_200"
                 }
               }
             }
@@ -1743,7 +1887,7 @@
           }
         }
       },
-      
+
       "CommentCreate": {
         "type": "object",
         "properties": {
@@ -1806,6 +1950,85 @@
           }
         }
       },
+      "MessageReceived": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "binary",
+            "example": "5ea55b3e79152d0017d846e4",
+            "description": "Message ID"
+          },
+          "owner": {
+            "type": "string",
+            "example": "5ea5490c793d2f00176228da",
+            "format": "binary",
+            "description": "Message Owner - Sender ID"
+          },
+          "from": {
+            "type": "string",
+            "example": "5ea5490c793d2f00176228da",
+            "format": "binary",
+            "description": "Message from - Sender ID"
+          },
+          "body": {
+            "type": "string",
+            "example": "new message"
+          },
+          "seen": {
+            "type": "boolean",
+            "expample": "true",
+            "default": "false"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          }
+        }
+      },
+      "MessageSent": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "binary",
+            "example": "5ea55b3e79152d0017d846e4",
+            "description": "Message ID"
+          },
+          "owner": {
+            "type": "string",
+            "example": "5ea5490c793d2f00176228da",
+            "format": "binary",
+            "description": "Message Owner - Sender ID"
+          },
+          "to": {
+            "type": "string",
+            "example": "5ea5490c793d2f00176228da",
+            "format": "binary",
+            "description": "Send message to - Receiver ID"
+          },
+          "body": {
+            "type": "string",
+            "example": "new message"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-12T09:38:23.104Z"
+          }
+        }
+      },
       "MessageCreate": {
         "type": "object",
         "properties": {
@@ -1825,6 +2048,15 @@
             "type": "string",
             "example": "new message",
             "required": true
+          }
+        }
+      },
+      "TotalData": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "Number",
+            "example": 10
           }
         }
       },
