@@ -1,6 +1,10 @@
 const express = require("express");
-const cors = require("cors");
 
+const http = require("http");
+const socketIo = require("socket.io");
+
+const cors = require("cors");
+const User = require("./library/models/user.model");
 require("./db/mongoose");
 
 const userRoute = require("./routes/user.route");
@@ -9,6 +13,8 @@ const postRoute = require("./routes/post.route");
 const commentRoute = require("./routes/comment.route");
 const messageRoute = require("./routes/message.route");
 const authMiddleware = require("./library/middleware/auth.middleware");
+
+const messagesSockets = require("./library/sokets/message.socket");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./doc/swagger.json");
@@ -45,6 +51,62 @@ app.use((error, req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {
+const server = http.createServer(app);
+const io = socketIo(server);
+
+let interval;
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+  if (interval) {
+    clearInterval(interval);
+  }
+  const token = socket.handshake.query.token;
+
+  // socket.on("unreadMsgs", function (data) {
+  //   interval = setInterval(() => unreadMsgNum(socket, data, token), 2000);
+  // });
+  socket.on("unreadMessagesNumber", function (data) {
+    interval = setInterval(
+      () =>
+        messagesSockets.getUnreadMessagesNumber(
+          socket,
+          data,
+          "unreadMessagesNumber"
+        ),
+      2000
+    );
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+    clearInterval(interval);
+  });
+});
+
+//GET USER UNREAD MESSAGES NUMBER
+const unreadMsgNum = async (io, data) => {
+  const receiverID = data.receiverID;
+
+  const model = await User.findById(receiverID);
+
+  const receivedData = await model
+    .populate({
+      path: "receivedMessages",
+      match: { seen: false },
+    })
+    .execPopulate();
+  // if (!receivedData["receivedMessages"]) {
+  //   res.status(404).send({ error: `${req.path} not found` });
+  //   return;
+  // }
+  const totalUnreadMessages = receivedData["receivedMessages"].length;
+  io.emit("unreadMsgs", totalUnreadMessages);
+};
+
+// app.listen(PORT, () => {
+//   console.log(`Server has started on ${PORT}`);
+// });
+server.listen(PORT, () => {
   console.log(`Server has started on ${PORT}`);
 });
