@@ -114,9 +114,72 @@ const getAllReceiverMessagesFromSender = async (socket, data, message) => {
   }
 };
 
+/////////////////
+const getAllMessages = async (socket, data, message) => {
+  try {
+    const limit = Number.parseInt(data.limit) || 10;
+    const offset = Number.parseInt(data.offset) || 0;
+    const receiverID = data.receiverID;
+    const senderID = data.senderID;
+
+    const receiverID2 = data.receiverID2;
+    const senderID2 = data.senderID2;
+
+    const model = await User.findById(senderID);
+
+    const sentData = await model
+      .populate({
+        path: "sentMessages",
+        match: { to: receiverID },
+        options: {
+          limit: parseInt(limit),
+          skip: parseInt(offset),
+          sort: {
+            createdAt: -1, // -1 desc, 1 asc
+          },
+        },
+      })
+      .execPopulate();
+
+    if (!sentData["sentMessages"]) {
+      throw new Error({ error: `${message} not found` });
+    }
+
+    const model2 = await User.findById(receiverID2);
+
+    const receivedData = await model2
+      .populate({
+        path: "receivedMessages",
+        match: { from: senderID2 },
+        options: {
+          limit: parseInt(limit),
+          skip: parseInt(offset),
+          sort: {
+            createdAt: -1, // -1 desc, 1 asc
+          },
+        },
+      })
+      .execPopulate();
+    if (!receivedData["receivedMessages"]) {
+      throw new Error({ error: `${message} not found` });
+    }
+
+    const messData = [
+      ...receivedData["receivedMessages"],
+      ...sentData["sentMessages"],
+    ];
+    socket.emit(message, messData);
+
+    // return sentData["sentMessages"];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getUnreadMessagesNumber,
   getUnreadMessagesNumberFromSingleSender,
   getAllSentMessagesToReceiver,
   getAllReceiverMessagesFromSender,
+  getAllMessages,
 };

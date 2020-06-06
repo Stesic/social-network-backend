@@ -54,17 +54,15 @@ app.use((error, req, res, next) => {
 const server = http.createServer(app);
 const io = socketIo(server);
 
-let interval;
-
 io.on("connection", (socket) => {
   console.log("New client connected");
-  // if (interval) {
-  //   clearInterval(interval);
-  // }
-  // const token = socket.handshake.query.token;
 
+  // const token = socket.handshake.query.token;
+  let unrMessInt;
+  let unrMessSenderInt;
+  let allMessInt;
   socket.on("unreadMessagesNumber", function (data) {
-    interval = setInterval(
+    unrMessInt = setInterval(
       () =>
         messagesSockets.getUnreadMessagesNumber(
           socket,
@@ -76,7 +74,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("unreadMessagesNumberFromSingleSender", function (data) {
-    interval = setInterval(
+    unrMessSenderInt = setInterval(
       () =>
         messagesSockets.getUnreadMessagesNumberFromSingleSender(
           socket,
@@ -87,30 +85,18 @@ io.on("connection", (socket) => {
     );
   });
 
-  // socket.on("allMessages", async function (data) {
-  //   interval = setInterval(() => {
-  //     messagesSockets.getAllSentMessagesToReceiver(
-  //       socket,
-  //       {
-  //         senderID: data.senderID,
-  //         receiverID: data.receiverID,
-  //       },
-  //       "allMessages"
-  //     );
-  //     messagesSockets.getAllReceiverMessagesFromSender(
-  //       socket,
-  //       {
-  //         senderID: data.receiverID,
-  //         receiverID: data.senderID,
-  //       },
-  //       "allMessages"
-  //     );
-  //   }, 2000);
-  // });
+  socket.on("allMessages", async function (data) {
+    allMessInt = setInterval(
+      () => messagesSockets.getAllMessages(socket, data, "allMessages"),
+      2000
+    );
+  });
 
   socket.on("disconnect", () => {
     console.log("Client disconnected");
-    clearInterval(interval);
+    clearInterval(unrMessInt);
+    clearInterval(unrMessSenderInt);
+    clearInterval(allMessInt);
   });
 });
 
@@ -120,3 +106,15 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log(`Server has started on ${PORT}`);
 });
+
+// const MessageSent = require("./library/models/message.model").sent;
+// const MessageReceived = require("./library/models/message.model").received;
+
+// const main = async () => {
+//   // await User.deleteMany({});
+//   MessageSent.collection.drop();
+//   // Post.collection.drop();
+//   MessageReceived.collection.drop();
+//   // Comment.collection.drop();
+// };
+// main();
