@@ -14,12 +14,14 @@ const commentRoute = require("./routes/comment.route");
 const messageRoute = require("./routes/message.route");
 const authMiddleware = require("./library/middleware/auth.middleware");
 
-const messagesSockets = require("./library/sokets/message.socket");
+const messagesSockets = require("./library/sockets/message.socket");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./doc/swagger.json");
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 const PORT = process.env.PORT || 5500;
 
@@ -50,9 +52,6 @@ app.use((error, req, res, next) => {
   res.status(500).send({ error: error.message });
   next();
 });
-
-const server = http.createServer(app);
-const io = socketIo(server);
 
 io.on("connection", (socket) => {
   console.log("New client connected");
@@ -100,13 +99,11 @@ io.on("connection", (socket) => {
   });
 });
 
-// app.listen(PORT, () => {
-//   console.log(`Server has started on ${PORT}`);
-// });
 server.listen(PORT, () => {
   console.log(`Server has started on ${PORT}`);
 });
 
+// delete all messages
 // const MessageSent = require("./library/models/message.model").sent;
 // const MessageReceived = require("./library/models/message.model").received;
 

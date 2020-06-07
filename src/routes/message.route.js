@@ -6,6 +6,11 @@ ObjectID = require("mongodb").ObjectID;
 const SentMessage = Messages.sent;
 const ReceivedMessage = Messages.received;
 
+const constants = require("../library/shared/constants");
+
+const decrypt = constants.decrypt;
+const code = constants.code;
+
 const router = express.Router();
 
 router.post("/messages/send", async (req, res) => {
@@ -68,6 +73,11 @@ router.get("/messages/sent/:senderID/:receiverID", async (req, res) => {
       return;
     }
 
+    sentData["sentMessages"].forEach((message) => {
+      const myDecipher = decrypt(code);
+      message.body = myDecipher(message.body);
+    });
+
     res.status(200).send({
       data: sentData["sentMessages"],
     });
@@ -104,6 +114,11 @@ router.get("/messages/received/:senderID/:receiverID", async (req, res) => {
       res.status(404).send({ error: `${req.path} not found` });
       return;
     }
+
+    receivedData["receivedMessages"].forEach((message) => {
+      const myDecipher = decrypt(code);
+      message.body = myDecipher(message.body);
+    });
 
     res.status(200).send({
       data: receivedData["receivedMessages"],
