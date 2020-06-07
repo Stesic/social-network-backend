@@ -105,12 +105,12 @@ const getAllMessages = async (socket, data, message) => {
       ...sentData["sentMessages"],
     ];
 
-    const emitMessages = allMessages.forEach((message) => {
+    allMessages.forEach((message) => {
       const myDecipher = decrypt(code);
       message.body = myDecipher(message.body);
     });
 
-    socket.emit(message, emitMessages);
+    socket.emit(message, allMessages);
   } catch (error) {
     console.log(error);
   }
