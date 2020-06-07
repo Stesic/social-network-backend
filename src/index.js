@@ -17,7 +17,8 @@ const authMiddleware = require("./library/middleware/auth.middleware");
 const messagesSockets = require("./library/sockets/message.socket");
 
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./doc/swagger.json");
+// const swaggerDocument = require("./doc/swagger.json");
+const swaggerDocument = require("./doc/swagger.js");
 
 const app = express();
 const server = http.createServer(app);

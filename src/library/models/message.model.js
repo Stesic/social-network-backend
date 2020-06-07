@@ -70,22 +70,6 @@ SentMessageSchema.pre("save", async function (next) {
   next();
 });
 
-// ReceivedMessageSchema.post("init", () => {
-//   const message = this;
-//   const myDecipher = decrypt(code);
-
-//   message.body = myDecipher(message.body);
-// });
-
-// SentMessageSchema.post("save", function () {
-//   const message = this;
-//   const myDecipher = decrypt(code);
-
-//   message.body = myDecipher(message.body);
-
-//   console.log(message.body);
-// });
-
 module.exports = {
   sent: mongoose.model("SentMessage", SentMessageSchema),
   received: mongoose.model("ReceivedMessage", ReceivedMessageSchema),
