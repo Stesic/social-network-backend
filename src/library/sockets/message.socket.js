@@ -100,17 +100,17 @@ const getAllMessages = async (socket, data, message) => {
       throw new Error({ error: `${message} not found` });
     }
 
-    const messData = [
+    const allMessages = [
       ...receivedData["receivedMessages"],
       ...sentData["sentMessages"],
     ];
 
-    messData.forEach((message) => {
+    const emitMessages = allMessages.forEach((message) => {
       const myDecipher = decrypt(code);
       message.body = myDecipher(message.body);
     });
 
-    socket.emit(message, messData);
+    socket.emit(message, emitMessages);
   } catch (error) {
     console.log(error);
   }
