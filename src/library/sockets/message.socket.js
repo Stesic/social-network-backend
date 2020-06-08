@@ -51,7 +51,6 @@ const getUnreadMessagesNumberFromSingleSender = async (
   }
 };
 
-/////////////////
 const getAllMessages = async (socket, data, message) => {
   try {
     const limit = Number.parseInt(data.limit) || 5;

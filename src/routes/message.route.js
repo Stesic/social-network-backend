@@ -1,7 +1,6 @@
 const express = require("express");
 const User = require("../library/models/user.model");
 const Messages = require("../library/models/message.model");
-ObjectID = require("mongodb").ObjectID;
 
 const SentMessage = Messages.sent;
 const ReceivedMessage = Messages.received;
@@ -9,6 +8,7 @@ const ReceivedMessage = Messages.received;
 const constants = require("../library/shared/constants");
 
 const decrypt = constants.decrypt;
+const encrypt = constants.encrypt;
 const code = constants.code;
 
 const router = express.Router();
@@ -22,15 +22,17 @@ router.post("/messages/send", async (req, res) => {
     res.status(400).send({ data: "Bad request!!!" });
     return;
   }
+  const messageCipher = encrypt(code);
+  const encryptedBody = messageCipher(msgBody);
   const senderModel = new SentMessage({
     owner: senderID,
     to: receiverID,
-    body: msgBody,
+    body: encryptedBody,
   });
   const receiverModel = new ReceivedMessage({
     owner: receiverID,
     from: senderID,
-    body: msgBody,
+    body: encryptedBody,
     seen: false,
   });
 
