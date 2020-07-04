@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const User = require("../library/models/user.model");
 
 const getRequest = require("../library/requests/get.request");
@@ -59,6 +60,54 @@ router.patch("/users/:id/last-active", async (req, res) => {
 //DELETE SINGLE USER
 router.delete("/users/:id", (req, res) => {
   deleteRequest.deleteOne(req, res, User);
+});
+
+///
+const multer = require("multer");
+
+const uploadFile = multer({
+  // dest: "src/images",
+
+  limits: {
+    fileSize: 5000000,
+  },
+  fileFilter(req, file, cb) {
+    // console.log(req.params.id);
+    const originalFileName = file.originalname.toLowerCase();
+    if (!originalFileName.match(/\.(jpg|png|jfif)$/)) {
+      cb(new Error("File must be .img or .png"));
+    }
+
+    cb(null, true);
+  },
+});
+
+router.post(
+  "/users/:id/image",
+  uploadFile.single("image"),
+  async (req, res) => {
+    const image = req.file.buffer;
+
+    req.user.avatarUrl = image;
+    const updatedUser = await req.user.save();
+
+    if (updatedUser) {
+      res.status(201).send({ data: image });
+    } else {
+      res.status(400).send("Error: user image not updated!");
+    }
+  }
+);
+router.get("/users/:id/image", async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findById(id);
+  // const image = path.join(
+  //   path.dirname(require.main.filename),
+  //   "images",
+  //   user.avatarUrl
+  // );
+  // console.log(image);
+  res.status(201).send({ data: user.avatarUrl });
 });
 
 module.exports = router;
