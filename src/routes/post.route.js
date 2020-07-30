@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 
 const Post = require("../library/models/post.model");
 const Comment = require("../library/models/comment.model");
@@ -12,6 +13,7 @@ const router = new express.Router();
 
 //GET ALL POSTS
 router.get("/posts", async (req, res) => {
+  
   getRequest.getAll(req, res, Post, "src", false);
 });
 
@@ -43,6 +45,40 @@ router.patch("/posts/:id", async (req, res) => {
 //DELETE SINGLE POST
 router.delete("/posts/:id", async (req, res) => {
   deleteRequest.deleteOne(req, res, Post, Comment, "comments");
+});
+
+////
+const uploadFile = multer({
+  // dest: "src/images",
+
+  limits: {
+    fileSize: 5000000,
+  },
+  fileFilter(req, file, cb) {
+    // console.log(req.params.id);
+    const originalFileName = file.originalname.toLowerCase();
+    if (!originalFileName.match(/\.(jpg|png|jfif)$/)) {
+      cb(new Error("File must be .img or .png"));
+    }
+
+    cb(null, true);
+  },
+});
+
+router.post("/image/posts", uploadFile.single("image"), async (req, res) => {
+  const image = req.file.buffer;
+  console.log("here i am");
+  const imagePost = new Post({
+    image,
+    owner: req.user._id,
+  });
+
+  try {
+    await imagePost.save();
+    res.status(201).send({ data: "The record has been successfully created." });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 });
 
 module.exports = router;

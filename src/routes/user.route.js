@@ -1,5 +1,6 @@
 const express = require("express");
-const path = require("path");
+const multer = require("multer");
+
 const User = require("../library/models/user.model");
 
 const getRequest = require("../library/requests/get.request");
@@ -63,7 +64,6 @@ router.delete("/users/:id", (req, res) => {
 });
 
 ///
-const multer = require("multer");
 
 const uploadFile = multer({
   // dest: "src/images",
@@ -98,16 +98,5 @@ router.post(
     }
   }
 );
-router.get("/users/:id/image", async (req, res) => {
-  const id = req.params.id;
-  const user = await User.findById(id);
-  // const image = path.join(
-  //   path.dirname(require.main.filename),
-  //   "images",
-  //   user.avatarUrl
-  // );
-  // console.log(image);
-  res.status(201).send({ data: user.avatarUrl });
-});
 
 module.exports = router;
