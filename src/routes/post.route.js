@@ -13,7 +13,6 @@ const router = new express.Router();
 
 //GET ALL POSTS
 router.get("/posts", async (req, res) => {
-  
   getRequest.getAll(req, res, Post, "src", false);
 });
 
@@ -32,9 +31,9 @@ router.get("/posts/:id/comments", async (req, res) => {
 });
 
 //POST-CREATE NEW POST
-router.post("/posts", async (req, res) => {
-  postRequest.postNew(req, res, Post);
-});
+// router.post("/posts", async (req, res) => {
+//   postRequest.postNew(req, res, Post);
+// });
 
 //PATCH UPDATE POST
 router.patch("/posts/:id", async (req, res) => {
@@ -65,17 +64,28 @@ const uploadFile = multer({
   },
 });
 
-router.post("/image/posts", uploadFile.single("image"), async (req, res) => {
-  const image = req.file.buffer;
-  console.log("here i am");
-  const imagePost = new Post({
-    image,
-    owner: req.user._id,
-  });
-
+router.post("/posts", uploadFile.single("image"), async (req, res) => {
   try {
-    await imagePost.save();
-    res.status(201).send({ data: "The record has been successfully created." });
+    const postType = req.query.type;
+    console.log(req.query)
+    console.log(postType + " post type")
+    if (postType === "image") {
+      const image = req.file.buffer;
+      const imagePost = new Post({
+        type:"image",
+        src: image,
+        owner: req.user._id,
+      });
+
+      await imagePost.save();
+      res
+        .status(201)
+        .send({ data: "The record has been successfully created." });
+
+      return;
+    }
+
+    postRequest.postNew(req, res, Post);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }

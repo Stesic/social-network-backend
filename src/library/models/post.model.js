@@ -13,7 +13,7 @@ const PostSchema = new mongoose.Schema(
       lowercase: true,
     },
     src: {
-      type: String,
+      type: Buffer,
       required: true,
       // lowercase: true,
     },

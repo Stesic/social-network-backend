@@ -83,9 +83,8 @@ const schemas = {
           example: "5eba6e8fec5d84001717a207",
         },
         avatarUrl: {
-          type: "string",
-          format: "byte",
-          example: "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
+         type: "buffer",
+          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>"
         },
         firstName: {
           type: "string",
@@ -148,9 +147,9 @@ const schemas = {
         minimum: 2,
       },
       avatarUrl: {
-        type: "string",
-        format: "byte",
-        example: "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
+        type: "buffer",
+        example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>"
+        // example: "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
       },
       about: {
         type: "string",
@@ -176,13 +175,14 @@ const schemas = {
           description: "type can be image,video or text",
         },
         src: {
-          type: "string",
-          example: "new text post",
+          type: "buffer",
+          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>",
           description:
-            "video src is embed youtube video, image src  is base64 format",
+            "video src is embed youtube video",
         },
         owner: {
           type: "string",
+          format: "binary",
           example: "5ea53939273df12f5cd4b200",
         },
         createdAt: {
@@ -207,12 +207,12 @@ const schemas = {
           description: "type can be image,video or text",
         },
         src: {
-          type: "string",
-          example: "new text post",
+          type: "buffer",
+          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>",
           required: true,
           description:
-            "video src is embed youtube video, image src  is base64 format",
-          format: "string || byte",
+            "video src is embed youtube video, image src is a file",
+ 
         },
       },
     },
@@ -224,8 +224,8 @@ const schemas = {
           example: "text",
         },
         src: {
-          type: "string",
-          format: "string || byte",
+          type: "buffer",
+          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>",
           example: "New text will update post",
         },
       },
