@@ -17,6 +17,18 @@ const message = {
           description: "Id of message Receiver",
           required: true,
         },
+        {
+          name: "limit",
+          in: "query",
+          description: "Limit per page",
+          default: 10,
+        },
+        {
+          name: "offset",
+          in: "query",
+          description: "Skip number of",
+          default: 0,
+        },
       ],
       responses: {
         "200": {
@@ -66,6 +78,18 @@ const message = {
           in: "path",
           description: "Id of message Receiver",
           required: true,
+        },
+        {
+          name: "limit",
+          in: "query",
+          description: "Limit per page",
+          default: 10,
+        },
+        {
+          name: "offset",
+          in: "query",
+          description: "Skip number of",
+          default: 0,
         },
       ],
       responses: {

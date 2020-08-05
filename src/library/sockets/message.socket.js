@@ -53,7 +53,7 @@ const getUnreadMessagesNumberFromSingleSender = async (
 
 const getAllMessages = async (socket, data, message) => {
   try {
-    const limit = Number.parseInt(data.limit) || 5;
+    const limit = Number.parseInt(data.limit) || 10;
     const offset = Number.parseInt(data.offset) || 0;
     const receiverID = data.receiverID;
     const senderID = data.senderID;
@@ -66,13 +66,13 @@ const getAllMessages = async (socket, data, message) => {
       .populate({
         path: "sentMessages",
         match: { to: receiverID },
-        options: {
-          limit: parseInt(limit),
-          skip: parseInt(offset),
-          sort: {
-            createdAt: -1, // -1 desc, 1 asc
-          },
-        },
+        // options: {
+        //   limit: parseInt(limit),
+        //   skip: parseInt(offset),
+        //   sort: {
+        //     createdAt: -1, // -1 desc, 1 asc
+        //   },
+        // },
       })
       .execPopulate();
 
@@ -86,13 +86,13 @@ const getAllMessages = async (socket, data, message) => {
       .populate({
         path: "receivedMessages",
         match: { from: senderID2 },
-        options: {
-          limit: parseInt(limit),
-          skip: parseInt(offset),
-          sort: {
-            createdAt: -1, // -1 desc, 1 asc
-          },
-        },
+        // options: {
+        //   limit: parseInt(limit),
+        //   skip: parseInt(offset),
+        //   sort: {
+        //     createdAt: -1, // -1 desc, 1 asc
+        //   },
+        // },
       })
       .execPopulate();
     if (!receivedData["receivedMessages"]) {
@@ -104,12 +104,18 @@ const getAllMessages = async (socket, data, message) => {
       ...sentData["sentMessages"],
     ];
 
-    allMessages.forEach((message) => {
+    const messages = allMessages
+      .sort(function (a, b) {
+        return a.createdAt > b.createdAt;
+      })
+      .slice(offset, limit);
+
+    messages.forEach((message) => {
       const myDecipher = decrypt(code);
       message.body = myDecipher(message.body);
     });
 
-    socket.emit(message, allMessages);
+    socket.emit(message, messages);
   } catch (error) {
     console.log(error);
   }

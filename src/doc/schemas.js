@@ -83,8 +83,9 @@ const schemas = {
           example: "5eba6e8fec5d84001717a207",
         },
         avatarUrl: {
-         type: "buffer",
-          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>"
+          type: "buffer",
+          example: `<Buffer 66 00 68 00 71 00 77 00 68 00 67 00 61 00 64 00 73 00>`,
+          description: `You will receive Buffer. You need to convert it to base64 and then set as img src with  "data:image/png;base64," prefix`,
         },
         firstName: {
           type: "string",
@@ -136,29 +137,32 @@ const schemas = {
       },
     },
     UserUpdate: {
-      firstName: {
-        type: "string",
-        example: "John ",
-        minimum: 2,
-      },
-      lastName: {
-        type: "string",
-        example: "Smith",
-        minimum: 2,
-      },
-      avatarUrl: {
-        type: "buffer",
-        example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>"
-        // example: "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
-      },
-      about: {
-        type: "string",
-        example: "something about yourself",
-        minimum: 10,
-      },
-      prefix: {
-        type: "string",
-        expample: "Developer",
+      type: "object",
+      properties: {
+        firstName: {
+          type: "string",
+          example: "John ",
+          minimum: 2,
+        },
+        lastName: {
+          type: "string",
+          example: "Smith",
+          minimum: 2,
+        },
+        avatarUrl: {
+          type: "file",
+          description: `Payload will be form data: const formData = new FormData();
+          formData.append("image", files[0], files[0].name)`,
+        },
+        about: {
+          type: "string",
+          example: "something about yourself",
+          minimum: 10,
+        },
+        prefix: {
+          type: "string",
+          expample: "Developer",
+        },
       },
     },
     Post: {
@@ -175,10 +179,8 @@ const schemas = {
           description: "type can be image,video or text",
         },
         src: {
-          type: "buffer",
-          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>",
-          description:
-            "video src is embed youtube video",
+          type: "string || buffer",
+          description: `Post can be image,video or text. Video src is embed youtube video If post is image, you will receive Buffer. You need to convert it to base64 and then set as img src with  "data:image/png;base64," prefix`,
         },
         owner: {
           type: "string",
@@ -207,12 +209,11 @@ const schemas = {
           description: "type can be image,video or text",
         },
         src: {
-          type: "buffer",
-          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>",
+          type: "string || file",
+          example: "new text post",
           required: true,
-          description:
-            "video src is embed youtube video, image src is a file",
- 
+          description: `Video src is embed youtube video. Image post payload will be form data: const formData = new FormData();
+          formData.append("image", files[0], files[0].name)`,
         },
       },
     },
@@ -222,11 +223,14 @@ const schemas = {
         type: {
           type: "string",
           example: "text",
+          description: "type can be image,video or text",
         },
         src: {
-          type: "buffer",
-          example: "<Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 04 00 00 00 02 46 08 02 00 00 00 4a ae 60 9f 00 00 00 09 70 48 59 73 00 00 0e c4 00 00 0e c4 01 ... 687485 more bytes>",
+          type: "string || file",
           example: "New text will update post",
+          required: true,
+          description: `Video src is embed youtube video. Image post payload will be form data: const formData = new FormData();
+          formData.append("image", files[0], files[0].name)`,
         },
       },
     },
