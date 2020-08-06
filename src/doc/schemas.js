@@ -161,10 +161,21 @@ const schemas = {
         },
         prefix: {
           type: "string",
-          expample: "Developer",
+          example: "Developer",
         },
       },
     },
+    UserProfileImage: {
+      type: "object",
+      properties: {
+        file: {
+          type: "array",
+          description: `const formData = new FormData();
+        formData.append("image", files[0], files[0].name);`,
+        },
+      },
+    },
+
     Post: {
       type: "object",
       properties: {

@@ -260,6 +260,64 @@ const user = {
       },
     },
   },
+  "/users/{id}/image": {
+    post: {
+      tags: ["User"],
+      summary: "Add User Image",
+      description: "Add User Profile Image",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          description: "User ID",
+          required: true,
+        },
+      ],
+      requestBody: {
+        required: true,
+        description: "User Profile Image Body",
+        content: {
+          "multipart/form-data": {
+            schema: {
+              $ref: "#/components/schemas/UserProfileImage",
+            },
+          },
+        },
+      },
+      responses: {
+        "201": {
+          description: "Image successfully added",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Created_201",
+              },
+            },
+          },
+        },
+        "400": {
+          description: "400 Error",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/error_400",
+              },
+            },
+          },
+        },
+        "500": {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/error_500",
+              },
+            },
+          },
+          description: "Internal server error",
+        },
+      },
+    },
+  },
   "/users/{id}/posts": {
     get: {
       tags: ["User"],

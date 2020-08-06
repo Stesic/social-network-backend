@@ -75,7 +75,7 @@ const uploadFile = multer({
     // console.log(req.params.id);
     const originalFileName = file.originalname.toLowerCase();
     if (!originalFileName.match(/\.(jpg|png|jfif)$/)) {
-      cb(new Error("File must be .img or .png"));
+      cb(new Error("File must be .jpg or .png or .jfif"));
     }
 
     cb(null, true);
@@ -86,15 +86,18 @@ router.post(
   "/users/:id/image",
   uploadFile.single("image"),
   async (req, res) => {
-    const image = req.file.buffer;
+    try {
+      const image = req.file.buffer;
+      req.user.avatarUrl = image;
+      const updatedUser = await req.user.save();
 
-    req.user.avatarUrl = image;
-    const updatedUser = await req.user.save();
-
-    if (updatedUser) {
-      res.status(201).send({ data: image });
-    } else {
-      res.status(400).send("Error: user image not updated!");
+      if (updatedUser) {
+        res.status(201).send({ data: "Image successfully added" });
+      } else {
+        res.status(400).send("Error: user image not added!");
+      }
+    } catch (error) {
+      res.status(500).send({ error: error.message });
     }
   }
 );

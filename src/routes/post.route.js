@@ -67,12 +67,12 @@ const uploadFile = multer({
 router.post("/posts", uploadFile.single("image"), async (req, res) => {
   try {
     const postType = req.query.type;
-    console.log(req.query)
-    console.log(postType + " post type")
+
     if (postType === "image") {
       const image = req.file.buffer;
+
       const imagePost = new Post({
-        type:"image",
+        type: "image",
         src: image,
         owner: req.user._id,
       });
